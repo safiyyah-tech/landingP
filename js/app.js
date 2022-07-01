@@ -22,8 +22,8 @@
  * Define Global Variables
  * 
 */
-const sections = document.querySelectorAll('section');
-const navUl = document.querySelector('#nav__list');
+const sections = Array.from(document.querySelectorAll('section'));
+const navUl = document.querySelector('#navbar__list');
 
 
 /**
@@ -31,6 +31,7 @@ const navUl = document.querySelector('#nav__list');
  * Start Helper Functions
  * 
 */
+
 
 
 
@@ -67,3 +68,39 @@ const navUl = document.querySelector('#nav__list');
 // Add class 'active' to section when near top of viewport
 
 // Set sections as active
+
+const ceateMenu = () => {
+  const nav = sections.map((section) =>
+    `
+    <li><a href="#" data-section="${section.id}" class="menu__link">${section.getAttribute('data-nav')}</a></li>
+    `
+  ).join('');
+  navUl.innerHTML = nav;
+};
+
+ceateMenu();
+
+const setActiveClass = () => {
+  sections.forEach((section) => {
+    const position = section.getBoundingClientRect();
+    if (position.y <= 150 && position.y >= -100) {
+      section.classList.add('your-active-class');
+    }
+    else {
+      section.classList.remove('your-active-class');
+    }
+  });
+}
+
+document.addEventListener('scroll', setActiveClass);
+
+const links = Array.from(document.querySelectorAll('.menu__link'));
+
+links.forEach((link) => {
+  link.addEventListener('click', (e) => {
+    e.preventDefault();
+    const sectionId = '#' + link.getAttribute('data-section');
+    const targetSection = document.querySelector(sectionId);
+    window.scrollTo(0, window.scrollY + targetSection.getBoundingClientRect().top);
+  })
+})
